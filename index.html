@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigo Secreto Navideño 🎄</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <style>
+        /* ========================================================== */
+        /* === 1. VARIABLES DE COLOR Y TAMAÑO (CONFIGURACIÓN FÁCIL) === */
+        /* ========================================================== */
+        :root {
+            --primary-color: #E74C3C; /* Rojo navideño: Color principal para botones y títulos */
+            --secondary-color: #2ECC71; /* Verde esmeralda: Color secundario para botones de acción */
+            --background-base-color: #2c3e50; /* Azul medianoche: Fondo del body (para que la nieve resalte) */
+            --text-color: #ecf0f1; /* Texto claro: Color de texto para el body (en fondo oscuro) */
+            --card-background: #ffffff; /* Blanco puro: Fondo para las tarjetas y formularios */
+            --card-text-color: #2c3e50; /* Azul oscuro: Texto dentro de las tarjetas blancas (para contraste) */
+            --border-radius: 12px; /* Radio de esquinas */
+            --box-shadow: 0 4px 20px rgba(0,0,0,0.2); /* Sombra estándar */
+            --input-height: 50px; /* Altura estándar de los campos de formulario */
+        }
+
+        /* ========================================================== */
+        /* === 2. RESET Y ESTILOS BASE === */
+        /* ========================================================== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Open Sans', sans-serif; background-color: var(--background-base-color); color: var(--text-color); line-height: 1.6; min-height: 100vh; padding: 2rem; position: relative; z-index: 2; }
+        .snow-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 1; background-repeat: repeat; }
+        .snow-layer:nth-child(1) { background-image: radial-gradient(white 1px, transparent 0); background-size: 50px 50px; animation: snowfall-animation 15s linear infinite; }
+        .snow-layer:nth-child(2) { background-image: radial-gradient(white 1.5px, transparent 0); background-size: 75px 75px; animation: snowfall-animation 20s linear infinite reverse; }
+        .snow-layer:nth-child(3) { background-image: radial-gradient(white 2px, transparent 0); background-size: 100px 100px; animation: snowfall-animation 25s linear infinite; }
+        @keyframes snowfall-animation { from { background-position: 0 0; } to { background-position: 500px 1000px; } }
+        header { text-align: center; margin-bottom: 3rem; padding: 1.5rem; background: var(--card-background); border-radius: var(--border-radius); box-shadow: var(--box-shadow); position: relative; z-index: 10; }
+        h1 { font-family: 'Great Vibes', cursive; color: var(--primary-color); font-size: 4.5rem; margin: 1rem 0; letter-spacing: 2px; text-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        h2 { font-family: 'Great Vibes', cursive; color: var(--primary-color); text-align: center; margin: 2.5rem 0 1.5rem; font-weight: 600; font-size: 2.5rem; position: relative; z-index: 10; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
+        p { text-align: center; color: var(--text-color); margin: 1rem 0; font-size: 1.1rem; position: relative; z-index: 10; }
+        #list-status { font-style: italic; margin-bottom: 1.5rem; }
+        hr { margin: 3rem auto; border: none; height: 3px; background: linear-gradient(to right, transparent, rgba(231, 76, 60, 0.4), transparent); max-width: 70%; position: relative; z-index: 10; }
+        .input-form { max-width: 600px; margin: 2rem auto; background: var(--card-background); padding: 2.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); display: flex; flex-direction: column; gap: 1.5rem; position: relative; z-index: 10; }
+        label { display: block; width: 100%; font-weight: 600; margin-bottom: 0.5rem; color: var(--card-text-color); }
+        input[type="text"], input[type="email"] { width: 100%; height: var(--input-height); padding: 0.8rem 1.2rem; border: 2px solid #E1E8ED; border-radius: var(--border-radius); font-size: 1.1rem; transition: all 0.3s ease; background-color: white; color: var(--card-text-color); }
+        input[type="text"]:focus, input[type="email"]:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.2); }
+        #participants-list { max-width: 1000px; margin: 2rem auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; padding: 1rem; position: relative; z-index: 10; }
+        .participant { background: var(--card-background); padding: 1.8rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); display: flex; flex-direction: column; gap: 0.5rem; transition: all 0.3s ease; border-left: 5px solid var(--secondary-color); }
+        .participant p { text-align: left; margin: 0; font-size: 1rem; color: var(--card-text-color); }
+        .participant:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 8px 25px rgba(0,0,0,0.18); }
+        input[type="submit"], button { width: 100%; height: var(--input-height); background-color: var(--primary-color); color: white; border: none; border-radius: var(--border-radius); font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        input[type="submit"]:hover, button:hover { background-color: #C0392B; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+        .secondary { background-color: var(--secondary-color); }
+        .secondary:hover { background-color: #27AE60; }
+        #submit-draw:disabled { background-color: #95a5a6; cursor: not-allowed; transform: none; box-shadow: none; }
+        .spinner { display: none; border: 4px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top: 4px solid white; width: 20px; height: 20px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @media (max-width: 768px) { body { padding: 1rem; } h1 { font-size: 3rem; } h2 { font-size: 2rem; } .input-form, #participants-list { padding: 1rem; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Nuevos estilos para la lista desplegable */
+        select {
+            width: 100%;
+            height: var(--input-height);
+            padding: 0.8rem 1rem;
+            border: 2px solid #E1E8ED;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background-color: white;
+            color: var(--card-text-color);
+            margin-top: 5px;
+        }
+        .rule-container {
+            border: 1px solid #E1E8ED;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            background: #f9f9f9;
+        }
+        #rules-list li {
+            background-color: #f0f0f0;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #rules-list li button {
+            width: auto;
+            height: auto;
+            padding: 4px 8px;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="snow-layer"></div> 
+    <div class="snow-layer"></div>
+    <div class="snow-layer"></div>
+
+    <header>
+        <h1>Amigo Secreto Navideño 🎄</h1>
+        <p style="color: var(--card-text-color);">¡Ho ho ho! Es hora de organizar el intercambio de regalos.</p>
+    </header>
+
+    <form class="input-form" id="add-participant-form">
+        <div>
+            <label for="name">
+                Nombre del Participante
+                <input type="text" id="name" name="name" placeholder="Ej: Rodolfo el Reno" aria-label="Nombre del participante" required>
+            </label>
+        </div>
+
+        <div>
+            <label for="email">
+                Email del Participante
+                <input type="email" id="email" name="email" 
+                       placeholder="Ej: rodolfo@navidad.com" aria-label="Email del participante" 
+                       required
+                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                       title="Por favor, introduce un correo electrónico válido (ej: nombre@dominio.com).">
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" id="submit-add">Añadir Participante</button>
+        </div>
+    </form>
+
+    <hr>
+    
+    <h2>Reglas de Exclusión (Quién no toca a quién) 🚫</h2>
+
+    <div class="input-form" id="exclusion-form-container" style="max-width: 600px; display: none;">
+        <p style="color: var(--card-text-color); text-align: center; margin-bottom: 1rem;">Define las parejas que <b>NO</b> deben regalarse entre sí.</p>
+        
+        <div class="rule-container">
+             <label for="gifter-select">
+                <b>Regalador (A):</b>
+                <select id="gifter-select" required></select>
+            </label>
+
+            <label for="receiver-select" style="margin-top: 1rem;">
+                <b>No debe regalar a (B):</b>
+                <select id="receiver-select" required></select>
+            </label>
+
+            <div class="form-actions" style="margin-top: 1rem;">
+                <button type="button" id="add-rule-btn" style="background-color: #F39C12;">Añadir Regla de Exclusión</button>
+            </div>
+        </div>
+
+        <div id="current-rules" style="margin-top: 1.5rem; color: var(--card-text-color);">
+            <p style="color: var(--card-text-color); font-weight: 600; text-align: center;">Reglas Activas:</p>
+            <ul id="rules-list" style="list-style: none; padding: 0; margin-top: 0.5rem; font-size: 0.95rem;">
+                </ul>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>Participantes Registrados 🎁</h2>
+
+    <p id="list-status">Aún no hay participantes. ¡Añade al menos 3 para sortear!</p>
+
+    <div id="participants-list">
+        </div>
+
+    <div class="input-form" style="max-width: 400px; padding: 1.5rem; margin-top: 3rem;">
+        <button type="button" class="secondary" id="submit-draw" disabled>
+            <span id="draw-text">¡Realizar el Gran Sorteo! 🤫 (Mínimo 3)</span>
+            <div class="spinner" id="draw-spinner"></div>
+        </button>
+    </div>
+
+    <script>
+        // ******************************************************************
+        // ****** CONFIGURACIÓN DE EMAILJS (Claves proporcionadas por ti) ******
+        // ******************************************************************
+        const SERVICE_ID = 'amigo_secreto'; 
+        const TEMPLATE_ID = 'template_6al07yk'; 
+        const PUBLIC_KEY = 'RndeggaR0uMTtR9TY'; 
+        // ******************************************************************
+
+        let participants = []; 
+        let exclusionRules = []; // Almacena pares {gifter: 'A', receiver: 'B'}
+
+        // Referencias a elementos del DOM
+        const form = document.getElementById('add-participant-form');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const listContainer = document.getElementById('participants-list');
+        const listStatus = document.getElementById('list-status');
+        const drawButton = document.getElementById('submit-draw');
+        const drawText = document.getElementById('draw-text');
+        const drawSpinner = document.getElementById('draw-spinner');
+        const addButton = document.getElementById('submit-add');
+        
+        // Elementos de la nueva sección de reglas
+        const exclusionFormContainer = document.getElementById('exclusion-form-container');
+        const gifterSelect = document.getElementById('gifter-select');
+        const receiverSelect = document.getElementById('receiver-select');
+        const addRuleBtn = document.getElementById('add-rule-btn');
+        const rulesList = document.getElementById('rules-list');
+
+        // Inicializar EmailJS
+        emailjs.init(PUBLIC_KEY);
+
+        // --- MANEJO DE LA INTERFAZ Y REGLAS ---
+
+        // Función para actualizar la lista de reglas en pantalla
+        function renderRules() {
+            rulesList.innerHTML = '';
+            if (exclusionRules.length === 0) {
+                rulesList.innerHTML = '<li style="text-align: center; color: #aaa;">No hay reglas de exclusión activas.</li>';
+            } else {
+                exclusionRules.forEach((rule, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        ${rule.gifter} ➡️ **NO toca a** ➡️ ${rule.receiver} 
+                        <button style="background: #e74c3c;" onclick="removeRule(${index})">X</button>
+                    `;
+                    rulesList.appendChild(li);
+                });
+            }
+        }
+        
+        // Función global para ser llamada por el botón "X"
+        window.removeRule = function(index) {
+            exclusionRules.splice(index, 1);
+            renderRules();
+        }
+
+        // Función para poblar los selectores (dropdowns) con los nombres de los participantes
+        function populateRuleSelects() {
+            gifterSelect.innerHTML = '';
+            receiverSelect.innerHTML = '';
+            
+            // Añadir una opción predeterminada no seleccionable
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "Seleccionar...";
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            
+            gifterSelect.appendChild(defaultOption.cloneNode(true));
+            receiverSelect.appendChild(defaultOption.cloneNode(true));
+
+            participants.forEach(p => {
+                const option1 = document.createElement('option');
+                option1.value = p.name;
+                option1.textContent = p.name;
+                
+                const option2 = option1.cloneNode(true);
+
+                gifterSelect.appendChild(option1);
+                receiverSelect.appendChild(option2);
+            });
+
+            // Mostrar el formulario de reglas si hay 2 o más participantes
+            if (participants.length >= 2) {
+                exclusionFormContainer.style.display = 'flex';
+            } else {
+                exclusionFormContainer.style.display = 'none';
+            }
+        }
+
+
+        function renderParticipants() {
+            listContainer.innerHTML = ''; 
+
+            if (participants.length === 0) {
+                listStatus.style.display = 'block';
+            } else {
+                listStatus.style.display = 'none';
+            }
+
+            const canDraw = participants.length >= 3;
+            drawButton.disabled = !canDraw;
+            drawText.textContent = canDraw 
+                ? '¡Realizar el Gran Sorteo! 🤫' 
+                : `¡Realizar el Gran Sorteo! 🤫 (Faltan ${3 - participants.length})`;
+
+            participants.forEach(p => {
+                const participantDiv = document.createElement('div');
+                participantDiv.classList.add('participant');
+                participantDiv.innerHTML = `<p><strong>Nombre:</strong> ${p.name}</p><p><strong>Email:</strong> ${p.email}</p>`;
+                listContainer.appendChild(participantDiv);
+            });
+            
+            // Actualizar reglas y selects
+            populateRuleSelects();
+            renderRules();
+        }
+
+        function handleAddParticipant(event) {
+            event.preventDefault(); 
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+
+            if (name === '' || email === '') {
+                alert('⚠️ Por favor, ingresa tanto el nombre como el email.');
+                return;
+            }
+
+            // Evitar duplicados
+            if (participants.some(p => p.name.toLowerCase() === name.toLowerCase() || p.email.toLowerCase() === email.toLowerCase())) {
+                 alert('⚠️ ¡Participante o email ya agregado!');
+                 return;
+            }
+            
+            const newParticipant = { name, email };
+            participants.push(newParticipant);
+
+            renderParticipants();
+
+            nameInput.value = '';
+            emailInput.value = '';
+            nameInput.focus();
+        }
+        
+        // Manejador para añadir una regla usando los selectores
+        function handleAddRule() {
+            const gifterName = gifterSelect.value;
+            const receiverName = receiverSelect.value;
+            
+            if (!gifterName || !receiverName) {
+                alert('⚠️ Por favor, selecciona un Regalador y un Receptor.');
+                return;
+            }
+            
+            if (gifterName === receiverName) {
+                alert('⚠️ ¡La regla de auto-regalo siempre está activa! No puedes establecer una regla de exclusión donde el regalador y el receptor sean el mismo.');
+                return;
+            }
+            
+            // Verificar si la regla ya existe
+            const ruleExists = exclusionRules.some(rule => 
+                rule.gifter === gifterName && rule.receiver === receiverName
+            );
+            
+            if (ruleExists) {
+                alert('⚠️ Esta regla de exclusión ya fue añadida.');
+                return;
+            }
+
+            exclusionRules.push({ gifter: gifterName, receiver: receiverName });
+            renderRules();
+            
+            // Resetear los selectores a la opción predeterminada
+            gifterSelect.value = '';
+            receiverSelect.value = '';
+        }
+
+        // --- LÓGICA DEL SORTEO CON EXCLUSIONES ---
+
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex); 
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function isValidAssignment(gifter, receiver, rules) {
+            // 1. Regla de auto-regalo (siempre activa)
+            if (gifter.email === receiver.email) {
+                return false;
+            }
+            
+            // 2. Reglas de exclusión personalizadas
+            const excluded = rules.some(rule => 
+                rule.gifter === gifter.name && rule.receiver === receiver.name
+            );
+
+            return !excluded;
+        }
+
+        function attemptDraw(participants, rules) {
+            // Intentamos sortear hasta 500 veces para encontrar una combinación válida
+            const maxAttempts = 500; 
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                // Creamos una copia de los receptores y la mezclamos
+                const receivers = shuffle([...participants]);
+                let valid = true;
+                
+                for (let i = 0; i < participants.length; i++) {
+                    const gifter = participants[i];
+                    const receiver = receivers[i];
+
+                    if (!isValidAssignment(gifter, receiver, rules)) {
+                        valid = false;
+                        break;
+                    }
+                }
+                
+                if (valid) {
+                    return receivers; // Devolver la lista de receptores válida
+                }
+            }
+            return null; // Falló al encontrar una combinación válida
+        }
+
+        // Envía el correo usando las credenciales de EmailJS
+        async function sendEmail(gifter, receiver) {
+            const templateParams = {
+                to_email: gifter.email, 
+                gifter_name: gifter.name,
+                receiver_name: receiver.name,
+                receiver_email: receiver.email
+            };
+
+            try {
+                const response = await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
+                return { success: true, name: gifter.name };
+            } catch (error) {
+                console.error(`❌ Error al enviar correo a ${gifter.name}:`, error);
+                return { success: false, name: gifter.name, error: error };
+            }
+        }
+
+        async function handleDraw() {
+            drawButton.disabled = true;
+            addButton.disabled = true;
+            drawText.style.display = 'none';
+            drawSpinner.style.display = 'block';
+
+            // Llamamos a attemptDraw con las reglas de exclusión
+            const receivers = attemptDraw(participants, exclusionRules);
+
+            if (!receivers) {
+                alert('🚫 No se pudo encontrar una asignación válida después de muchos intentos. Revisa tus reglas de exclusión, es posible que sean imposibles de cumplir.');
+                drawButton.disabled = false;
+                addButton.disabled = false;
+                drawText.style.display = 'block';
+                drawSpinner.style.display = 'none';
+                return;
+            }
+
+            // Continuar con el envío si la asignación es válida
+            const sendPromises = [];
+            for (let i = 0; i < participants.length; i++) {
+                sendPromises.push(sendEmail(participants[i], receivers[i]));
+            }
+
+            const results = await Promise.all(sendPromises);
+
+            drawButton.disabled = false;
+            addButton.disabled = false;
+            drawText.style.display = 'block';
+            drawSpinner.style.display = 'none';
+
+            const successfulSends = results.filter(r => r.success).length;
+            const failedSends = results.filter(r => !r.success);
+
+            if (failedSends.length === 0) {
+                alert(`🎉 ¡Sorteo Exitoso! Se han enviado ${successfulSends} correos a todos los participantes. ¡Revisa tu bandeja de entrada!`);
+            } else {
+                const failedNames = failedSends.map(f => f.name).join(', ');
+                alert(`⚠️ Sorteo completado, pero FALLÓ el envío a: ${failedNames}. Por favor, revisa la consola (F12) para ver los errores y notifica a estas personas manualmente.`);
+            }
+        }
+
+        // --- ASIGNACIÓN DE EVENTOS Y CARGA ---
+        form.addEventListener('submit', handleAddParticipant);
+        drawButton.addEventListener('click', handleDraw);
+        addRuleBtn.addEventListener('click', handleAddRule); // Evento para el botón de reglas
+        
+        renderParticipants();
+    </script>
+</body>
+</html>
