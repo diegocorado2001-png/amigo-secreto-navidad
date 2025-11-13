@@ -438,8 +438,14 @@
 
             // Continuar con el envío si la asignación es válida
             const sendPromises = [];
+            const finalAssignments = [];
+
             for (let i = 0; i < participants.length; i++) {
-                sendPromises.push(sendEmail(participants[i], receivers[i]));
+                const gifter = participants[i];
+                const receiver = receivers[i];
+                
+                finalAssignments.push({ gifter, receiver }); // Guardamos todas las asignaciones
+                sendPromises.push(sendEmail(gifter, receiver));
             }
 
             const results = await Promise.all(sendPromises);
@@ -455,8 +461,21 @@
             if (failedSends.length === 0) {
                 alert(`🎉 ¡Sorteo Exitoso! Se han enviado ${successfulSends} correos a todos los participantes. ¡Revisa tu bandeja de entrada!`);
             } else {
-                const failedNames = failedSends.map(f => f.name).join(', ');
-                alert(`⚠️ Sorteo completado, pero FALLÓ el envío a: ${failedNames}. Por favor, revisa la consola (F12) para ver los errores y notifica a estas personas manualmente.`);
+                const failedNames = failedSends.map(f => f.name);
+                
+                let manualAssignmentMessage = "\n\n=== ASIGNACIONES MANUALES (FALLOS DE CORREO) ===\n";
+                
+                // Busca las asignaciones de las personas cuyo correo falló
+                failedNames.forEach(failedGifterName => {
+                    const assignment = finalAssignments.find(a => a.gifter.name === failedGifterName);
+                    if (assignment) {
+                        manualAssignmentMessage += `${assignment.gifter.name} debe regalar a: ${assignment.receiver.name}\n`;
+                    }
+                });
+                
+                // Muestra un prompt con el resultado para que el organizador pueda copiar y pegar
+                prompt("ASIGNACIONES FALLIDAS (COPIAR Y PEGAR MANUALMENTE):", manualAssignmentMessage);
+
             }
         }
 
